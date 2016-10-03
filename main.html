@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Delivery Fee Calculator</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="http://blueplatechicago.com/wp-content/themes/blueplate/css/images/favicon.ico">
+
+    <link href="Styling/main.css" rel="stylesheet">   
+    <script src="Libraries/jquery.min.js"></script>
+    <script type="text/javascript" src="Scripts/geocoding.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMvDVoGEcxYhCgrQXQXs-ez4ymtMmWZC4&signed_in=true&callback=initMap" async defer></script>
+
+</head>
+<body>
+    <div id="floating-panel">
+        <div>
+            <input id="time" type="time" value="10:00">
+            <select id="day">
+                <option value="sunday">Sunday</option>
+                <option value="monday">Monday</option>
+                <option value="tuesday">Tuesday</option>
+                <option value="wednesday">Wednesday</option>
+                <option value="thursday">Thursday</option>
+                <option value="friday">Friday</option>
+                <option value="saturday">Saturday</option>
+            </select>
+            <input id="address" type="textbox">
+            <input id="submit" type="button" value="Calculate">
+        </div>
+        <div style="float:left;font-size:20px;">
+
+            <p id="fees" style="margin: 0px;padding: 0px;">Delivery Fee: </p>
+            <p id="format_addr" style="margin: 0px;padding: 0px;">Delivery Address: </p>
+        </div>
+    </div>
+
+    <div id="map" align="center">
+    </div>
+</body>
+</html>
