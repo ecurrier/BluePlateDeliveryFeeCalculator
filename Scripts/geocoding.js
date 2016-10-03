@@ -1,21 +1,91 @@
-/// <reference path="../Intellisense/XrmPage-vsdoc.js" />
-
 var map = null,
     marker = null,
     geocoder = null;
 
-var zoneOneCoords = null,
-    zoneOnePolygon = null,
-    zoneTwoCoords = null,
+var zoneOnePolygon = null,
     zoneTwoPolygon = null,
-    zoneThreeCoords = null,
     zoneThreePolygon = null,
-    zoneFourCoords = null,
     zoneFourPolygon = null,
-    zoneFiveCoords = null,
     zoneFivePolygon = null,
-    zoneSixCoords = null,
     zoneSixPolygon = null;
+
+var zoneOneCoords = [
+    { lat: 41.904433, lng: -87.596183 }, // East end of Divison
+    { lat: 41.902784, lng: -87.706797 }, // Divison and Kedzie
+    { lat: 41.837226, lng: -87.704829 }, // Kedzie and 31st
+    { lat: 41.838752, lng: -87.596183 }  // East end of 31st
+];
+
+// To make a hole in the center, switch first and fourth coords and third and second coords from previous zone
+var zoneTwoCoords = [
+    [
+        { lat: 41.947960, lng: -87.596183 }, // East end of Addison
+        { lat: 41.946122, lng: -87.747014 }, // Addison and Hwy50
+        { lat: 41.800322, lng: -87.743047 }, // Hwy50 and 51st
+        { lat: 41.802575, lng: -87.580000 }  // East end of 51st
+    ], [
+        { lat: 41.838752, lng: -87.596183 },
+        { lat: 41.837226, lng: -87.704829 },
+        { lat: 41.902784, lng: -87.706797 },
+        { lat: 41.904433, lng: -87.596183 }
+    ]
+];
+
+var zoneThreeCoords = [
+    [
+        { lat: 41.976790, lng: -87.596183 }, // East end of Foster
+        { lat: 41.975483, lng: -87.807047 }, // Foster and Hwy43
+        { lat: 41.757235, lng: -87.799989 }, // Hwy43/Harlem and W 74th
+        { lat: 41.761025, lng: -87.550000 }  // East end of E 74th
+    ], [
+        { lat: 41.802575, lng: -87.580000 },
+        { lat: 41.800322, lng: -87.743047 },
+        { lat: 41.946122, lng: -87.747014 },
+        { lat: 41.947960, lng: -87.596183 }
+    ]
+];
+
+var zoneFourCoords = [
+    [
+        { lat: 42.028200, lng: -87.596183 }, // East end of Oakton
+        { lat: 42.022898, lng: -87.920813 }, // Oakton and S Mt Prospect
+        { lat: 41.702250, lng: -87.920773 }, // Near 107th and Hwy171
+        { lat: 41.708660, lng: -87.510000 }  // East end of 103rd
+    ], [
+        { lat: 41.761025, lng: -87.550000 },
+        { lat: 41.757235, lng: -87.799989 },
+        { lat: 41.975483, lng: -87.807047 },
+        { lat: 41.976790, lng: -87.596183 }
+    ]
+];
+
+var zoneFiveCoords = [
+    [
+        { lat: 42.099200, lng: -87.510000 }, // East end of Willow
+        { lat: 42.103061, lng: -88.024227 }, // Near Rohwing and Hwy14
+        { lat: 41.641704, lng: -88.012902 }, // W 135th and Veterans Memorial Tollway
+        { lat: 41.652000, lng: -87.420000 }  // East end of 135th
+    ], [
+        { lat: 41.708660, lng: -87.510000 },
+        { lat: 41.702250, lng: -87.920773 },
+        { lat: 42.022898, lng: -87.920813 },
+        { lat: 42.028200, lng: -87.596183 }
+    ]
+];
+
+var zoneSixCoords = [
+    [
+        { lat: 42.189025, lng: -87.509043 }, // East end of Willow
+        { lat: 42.182032, lng: -88.135604 }, // Cuba and Barrington
+        { lat: 41.566032, lng: -88.132706 }, // 2100 Caton Farm Road
+        { lat: 41.583325, lng: -87.400000 }  // East end of 173rd
+    ], [
+        { lat: 41.652000, lng: -87.420000 },
+        { lat: 41.641704, lng: -88.012902 },
+        { lat: 42.103061, lng: -88.024227 },
+        { lat: 42.099200, lng: -87.510000 }
+    ]
+];
 
 var weekDayFees = {
     "monday": 0,
@@ -46,110 +116,25 @@ function initMap() {
     marker = new google.maps.Marker();
     geocoder = new google.maps.Geocoder();
 
+    /*
     var testMarker = new google.maps.Marker({
-	position: new google.maps.LatLng(41.886665, -87.658788),
-	url: 'http://www.google.com',
-	animation: google.maps.Animation.DROP
+	    position: new google.maps.LatLng(41.886665, -87.658788),
+	    url: 'http://www.google.com',
+	    animation: google.maps.Animation.DROP
     });
+
     testMarker.setMap(map);
     google.maps.event.addListener(testMarker, 'click', function() {window.location.href = testMarker.url;});
-
-    zoneOneCoords = [
-        { lat: 41.904433, lng: -87.596183 }, //East end of Divison
-        { lat: 41.902784, lng: -87.706797 }, //Divison and Kedzie
-        { lat: 41.837226, lng: -87.704829 }, //Kedzie and 31st
-        { lat: 41.838752, lng: -87.596183 } //East end of 31st
-    ];
+    */
 
     zoneOnePolygon = createPolygon(zoneOneCoords, '#FFCC00', '#FFF0B2');
-
-    // To make a hole in the center, switch first and fourth coords and third and second coords
-    zoneTwoCoords = [
-        [
-            { lat: 41.947960, lng: -87.596183 }, //East end of Addison
-            { lat: 41.946122, lng: -87.747014 }, //Addison and Hwy50
-            { lat: 41.800322, lng: -87.743047 }, //Hwy50 and 51st
-            { lat: 41.802575, lng: -87.580000 }  // East end of 51st
-        ], [
-            { lat: 41.838752, lng: -87.596183 },
-            { lat: 41.837226, lng: -87.704829 },
-            { lat: 41.902784, lng: -87.706797 },
-            { lat: 41.904433, lng: -87.596183 }
-        ]
-    ];
-
     zoneTwoPolygon = createPolygon(zoneTwoCoords, '#009933', '#99D6AD');
-
-    zoneThreeCoords = [
-        [
-            { lat: 41.976790, lng: -87.596183 }, //East end of Foster
-            { lat: 41.975483, lng: -87.807047 }, //Foster and Hwy43
-            { lat: 41.757235, lng: -87.799989 }, //Hwy43/Harlem and W 74th
-            { lat: 41.761025, lng: -87.550000 }  //East end of E 74th
-        ], [
-            { lat: 41.802575, lng: -87.580000 },
-            { lat: 41.800322, lng: -87.743047 },
-            { lat: 41.946122, lng: -87.747014 },
-            { lat: 41.947960, lng: -87.596183 }
-        ]
-    ];
-
     zoneThreePolygon = createPolygon(zoneThreeCoords, '#FFFF00', '#FFFFB2');
-
-    zoneFourCoords = [
-        [
-            { lat: 42.028200, lng: -87.596183 }, //East end of Oakton
-            { lat: 42.022898, lng: -87.920813 }, //Oakton and S Mt Prospect
-            { lat: 41.702250, lng: -87.920773 }, //Near 107th and Hwy171
-            { lat: 41.708660, lng: -87.510000 }  //East end of 103rd
-        ], [
-            { lat: 41.761025, lng: -87.550000 },
-            { lat: 41.757235, lng: -87.799989 },
-            { lat: 41.975483, lng: -87.807047 },
-            { lat: 41.976790, lng: -87.596183 }
-        ]
-    ];
-
     zoneFourPolygon = createPolygon(zoneFourCoords, '#CC0000', '#FF6666');
-
-    zoneFiveCoords = [
-        [
-            { lat: 42.099200, lng: -87.510000 }, //East end of Willow
-            { lat: 42.103061, lng: -88.024227 }, //Near Rohwing and Hwy14
-            { lat: 41.641704, lng: -88.012902 }, //W 135th and Veterans Memorial Tollway
-            { lat: 41.652000, lng: -87.420000 }  //East end of 135th
-        ], [
-            { lat: 41.708660, lng: -87.510000 },
-            { lat: 41.702250, lng: -87.920773 },
-            { lat: 42.022898, lng: -87.920813 },
-            { lat: 42.028200, lng: -87.596183 }
-        ]
-    ];
-
     zoneFivePolygon = createPolygon(zoneFiveCoords, '#663300', '#B29980');
-
-    zoneSixCoords = [
-        [
-            { lat: 42.189025, lng: -87.509043 }, //East end of Willow
-            { lat: 42.182032, lng: -88.135604 }, //Cuba and Barrington
-            { lat: 41.566032, lng: -88.132706 }, //2100 Caton Farm Road
-            { lat: 41.583325, lng: -87.400000 }  //East end of 173rd
-        ], [
-            { lat: 41.652000, lng: -87.420000 },
-            { lat: 41.641704, lng: -88.012902 },
-            { lat: 42.103061, lng: -88.024227 },
-            { lat: 42.099200, lng: -87.510000 }
-        ]
-    ];
-
     zoneSixPolygon = createPolygon(zoneSixCoords, '#993399', '#D6ADD6');
 
-    zoneSixPolygon.setMap(map);
-    zoneFivePolygon.setMap(map);
-    zoneFourPolygon.setMap(map);
-    zoneThreePolygon.setMap(map);
-    zoneTwoPolygon.setMap(map);
-    zoneOnePolygon.setMap(map);
+    applyZonesToMap(map);
 }
 
 function geocodeAddress() {
@@ -169,8 +154,8 @@ function geocodeAddress() {
             var lookup = new google.maps.Marker({
                 map: map,
                 position: new google.maps.LatLng(loc[0], loc[1]),
-		url: 'http://www.google.com',
-                draggable: true
+		        url: 'http://www.google.com',
+                draggable: false
             });
 
             var base = retrieveBaseValue(lookup);
@@ -189,6 +174,17 @@ function geocodeAddress() {
             alert('Geocode was not successful for the following reason: ' + status);
         }
     });
+}
+
+function applyZonesToMap(map) {
+
+    // Set them to the map in reverse order so the color of the largest area does not encompass the entire zone
+    zoneSixPolygon.setMap(map);
+    zoneFivePolygon.setMap(map);
+    zoneFourPolygon.setMap(map);
+    zoneThreePolygon.setMap(map);
+    zoneTwoPolygon.setMap(map);
+    zoneOnePolygon.setMap(map);
 }
 
 function retrieveFees() {
