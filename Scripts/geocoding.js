@@ -16,7 +16,29 @@ var zoneOneCoords = [
     { lat: 41.838752, lng: -87.596183 }  // East end of 31st
 ];
 
-// To make a hole in the center, switch first and fourth coords and third and second coords from previous zone
+// To cut out a hole in the center of a polygon, switch first and fourth coords and third and second coords from previous zone
+/* EXAMPLE
+    var zoneOneCoords = [
+        { lat: 41.904433, lng: -87.596183 }, -- 1
+        { lat: 41.902784, lng: -87.706797 }, -- 2
+        { lat: 41.837226, lng: -87.704829 }, -- 3
+        { lat: 41.838752, lng: -87.596183 } -- 4
+    ];
+
+    var zoneTwoCoords = [
+        [
+            { lat: 41.947960, lng: -87.596183 },
+            { lat: 41.946122, lng: -87.747014 }, 
+            { lat: 41.800322, lng: -87.743047 },
+            { lat: 41.802575, lng: -87.580000 } 
+        ], [
+            { lat: 41.838752, lng: -87.596183 }, -- 4
+            { lat: 41.837226, lng: -87.704829 }, -- 3
+            { lat: 41.902784, lng: -87.706797 }, -- 2
+            { lat: 41.904433, lng: -87.596183 } -- 1
+        ]
+    ];
+*/
 var zoneTwoCoords = [
     [
         { lat: 41.947960, lng: -87.596183 }, // East end of Addison
@@ -116,17 +138,6 @@ function initMap() {
     marker = new google.maps.Marker();
     geocoder = new google.maps.Geocoder();
 
-    /*
-    var testMarker = new google.maps.Marker({
-	    position: new google.maps.LatLng(41.886665, -87.658788),
-	    url: 'http://www.google.com',
-	    animation: google.maps.Animation.DROP
-    });
-
-    testMarker.setMap(map);
-    google.maps.event.addListener(testMarker, 'click', function() {window.location.href = testMarker.url;});
-    */
-
     zoneOnePolygon = createPolygon(zoneOneCoords, '#FFCC00', '#FFF0B2');
     zoneTwoPolygon = createPolygon(zoneTwoCoords, '#009933', '#99D6AD');
     zoneThreePolygon = createPolygon(zoneThreeCoords, '#FFFF00', '#FFFFB2');
@@ -168,7 +179,6 @@ function geocodeAddress() {
             map.setCenter(results[0].geometry.location);
             marker.setMap(map);
             marker.setPosition(results[0].geometry.location);
-
         }
         else {
             alert('Geocode was not successful for the following reason: ' + status);
@@ -178,7 +188,7 @@ function geocodeAddress() {
 
 function applyZonesToMap(map) {
 
-    // Set them to the map in reverse order so the color of the largest area does not encompass the entire zone
+    // Set them to the map in reverse order so the color of the largest area does not overwrite the border of the following zone
     zoneSixPolygon.setMap(map);
     zoneFivePolygon.setMap(map);
     zoneFourPolygon.setMap(map);
